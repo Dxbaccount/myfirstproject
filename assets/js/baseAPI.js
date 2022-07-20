@@ -10,5 +10,15 @@ $.ajaxPrefilter(function (options) {
             Authorization: localStorage.getItem('token') || ''
         }
     }
-    
+
+    // 为配置对象全局挂载 complete 函数
+    options.complete = function (res) {
+        if (res.responseJSON.status === 1 && res.responseJSON.message === '身份认证失败！') {
+            // 1. 强制清空 token 
+            localStorage.removeItem('token')
+            // 2. 强制跳转到登录页
+            location.href = '/login.html'
+        }
+    }
+
 })
