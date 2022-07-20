@@ -63,7 +63,7 @@ $(function () {
                 // 登录成功后，将服务器响应回来的 token 保存在 localStorage 中
                 localStorage.setItem('token', res.token)
                 // 跳转到后台主页
-                location.href = '/day01/index.html'
+                location.href = '/index.html'
             }
         })
     })
