@@ -1,0 +1,17 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    padding: 15px;
+    background-color: #F0F2F5;
+}
+
+/* 头部标题、按钮 */
+.layui-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
