@@ -1,4 +1,5 @@
 $(function () {
+
     let layer = layui.layer
     // 1.1 获取裁剪区域的 img 标签
     let $image = $('#image')
@@ -62,13 +63,13 @@ $(function () {
                     return layer.msg(res.message)
                 }
                 layer.msg(res.message)
-                console.log(11111)
                 window.parent.getUserInfo()
+                //
             }
         })
-        
-    
     })
+
+
 
 })
 
