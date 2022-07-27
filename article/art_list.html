@@ -11,7 +11,7 @@
 <body>
     <!-- 卡片区域 -->
     <div class="layui-card">
-        <div class="layui-card-header">卡片面板</div>
+        <div class="layui-card-header">文章列表</div>
         <div class="layui-card-body">
             <!-- 筛选区域 -->
             <!-- 列表区域 -->
@@ -45,7 +45,7 @@
             <tr>
                 <td>{{$value.title}}</td>
                 <td>{{$value.cate_name}}</td>
-                <td>{{$value.pub_date}}</td>
+                <td>{{$value.pub_date|dateFormat}}</td>
                 <td>{{$value.state}}</td>
                 <td>
                     <button type="button" class="layui-btn  layui-btn-xs">编辑</button>
