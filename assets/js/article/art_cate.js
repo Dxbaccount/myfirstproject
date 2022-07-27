@@ -40,7 +40,7 @@ $(function () {
     })
 
     // 修改文章分类
-    // 通过事件委托给 btn-edit 按钮，绑定点击事件
+    // 通过事件委托给编辑按钮，绑定点击事件
     let indexEdit = null
     $('tbody').on('click', '.btn-edit', function () {
         indexEdit = layer.open({
@@ -62,7 +62,48 @@ $(function () {
         })
     })
 
+    // 通过事件委托，给编辑的表单，绑定 submit 事件
+    $('body').on('submit', '#edit_form', function (e) {
+        e.preventDefault()
+        $.ajax({
+            method: 'POST',
+            url: '/my/article/updatecate',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.status !== 0) {
+                    return layer.msg(res.message)
+                }
+                layer.msg(res.message)
+                layer.close(indexEdit)
+                getArtcateList()
+            }
+        })
+    })
+
+    // 删除
+    // 通过事件委托，给删除按钮绑定点击事件
+    $('body').on('click', '.btn-del', function () {
+        layer.confirm('是否确认删除?', { icon: 3, title: '删除文章分类' }, function (index) {
+            //do something
+            let id = $(this).attr('data-id')
+            $.ajax({
+                method: 'GET',
+                url: '/my/article/deletecate/' + id,
+                success: function (res) {
+                    if (res.status !== 0) {
+                        return layer.msg(res.message)
+                    }
+                    layer.msg(res.message)
+                    getArtcateList()
+                }
+            })
+            layer.close(index)
+        })
+    })
+
 })
+
+
 
 // 获取文章分类列表
 function getArtcateList() {
