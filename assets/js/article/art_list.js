@@ -1,6 +1,7 @@
 $(function () {
     let layer = layui.layer
     let form = layui.form
+    let laypage = layui.laypage
 
     // 定义格式化时间的过滤器
     template.defaults.imports.dateFormat = function (date) {
@@ -46,6 +47,9 @@ $(function () {
                 // 使用模板引擎渲染表格数据
                 let htmlStr = template('tpl_table', res)
                 $('tbody').html(htmlStr)
+                console.log(res)
+                // 调用渲染分页的方法
+                renderPage(res.total)
             }
         })
     }
@@ -61,10 +65,33 @@ $(function () {
                     return
                 }
                 let artCateHtmlStr = template('tpl_artCate', res)
-                console.log(artCateHtmlStr)
                 $('[name=cate_id]').html(artCateHtmlStr)
                 form.render()
             }
+        })
+    }
+
+    // 给筛选表单绑定 submit 事件
+    $('#form_select').on('submit', function (e) {
+        e.preventDefault()
+        // 获取表单选中项的值
+        let cate_id = $('[name=cate_id]').val()
+        let state = $('[name=state]').val()
+        // 重新为查询参数赋值
+        q.cate_id = cate_id
+        q.state = state
+        // 根据筛选条件，重新渲染数据
+        getArtList()
+    })
+
+    // 定义渲染分页的方法
+    function renderPage(total) {
+        // 调用 laypage.render() 方法来渲染分页结构
+        laypage.render({
+            elem: 'page_box', // 分页容器的 id
+            count: total,     // 总数据条数
+            limit: q.pagesize, // 每页显示几条数据
+            curr: q.pagenum   // 设置默认选中的分页
         })
     }
 

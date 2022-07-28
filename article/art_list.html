@@ -14,10 +14,9 @@
         <div class="layui-card-header">文章列表</div>
         <div class="layui-card-body">
             <!-- 筛选区域 -->
-            <form class="layui-form" action="">
+            <form class="layui-form" id="form_select">
                 <div class="layui-form-item layui-inline">
                     <select name="cate_id">
-                        <option value="">所有分类</option>
                     </select>
                 </div>
                 <div class="layui-form-item layui-inline">
@@ -53,14 +52,15 @@
                 </tbody>
             </table>
             <!-- 分页区域 -->
+            <div id="page_box"></div>
         </div>
     </div>
 
-    <!-- 文章分类模板 -->
+    <!-- 分类选项模板 -->
     <script type="text/html" id="tpl_artCate">
         <option value="">所有分类</option>
         {{each data}}
-            <option value="{{$value.name}}">{{$value.name}}</option>
+            <option value="{{$value.Id}}">{{$value.name}}</option>
         {{/each}}
     </script>
 
