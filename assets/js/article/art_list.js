@@ -1,5 +1,6 @@
 $(function () {
     let layer = layui.layer
+    let form = layui.form
 
     // 定义格式化时间的过滤器
     template.defaults.imports.dateFormat = function (date) {
@@ -45,6 +46,24 @@ $(function () {
                 // 使用模板引擎渲染表格数据
                 let htmlStr = template('tpl_table', res)
                 $('tbody').html(htmlStr)
+            }
+        })
+    }
+
+    getArtCate()
+    // 获取文章分类数据
+    function getArtCate() {
+        $.ajax({
+            method: 'GET',
+            url: '/my/article/cates',
+            success: function (res) {
+                if (res.status !== 0) {
+                    return
+                }
+                let artCateHtmlStr = template('tpl_artCate', res)
+                console.log(artCateHtmlStr)
+                $('[name=cate_id]').html(artCateHtmlStr)
+                form.render()
             }
         })
     }
