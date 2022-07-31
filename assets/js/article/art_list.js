@@ -21,7 +21,7 @@ $(function () {
     // 补零函数
     function padZero(n) {
         return n > 9 ? n : '0' + n
-    } 
+    }
 
     // 定义查询参数对象
     let q = {
@@ -47,9 +47,11 @@ $(function () {
                 // 使用模板引擎渲染表格数据
                 let htmlStr = template('tpl_table', res)
                 $('tbody').html(htmlStr)
-                console.log(res)
+
+
                 // 调用渲染分页的方法
                 renderPage(res.total)
+
             }
         })
     }
@@ -86,15 +88,65 @@ $(function () {
 
     // 定义渲染分页的方法
     function renderPage(total) {
-        // 调用 laypage.render() 方法来渲染分页结构
+        //执行一个laypage实例
         laypage.render({
-            elem: 'page_box', // 分页容器的 id
-            count: total,     // 总数据条数
+            elem: 'page_box', //注意，这里的 test1 是 ID，不用加 # 号
+            count: total, //数据总数，从服务端得到
             limit: q.pagesize, // 每页显示几条数据
-            curr: q.pagenum   // 设置默认选中的分页
+            curr: q.pagenum,  // 设置被选中的分页
+            layout: ['count', 'limit', 'prev', 'page', 'next', 'skip'],
+            limits: [2, 3, 5, 10],
+            // 切换页码时，触发 jump 回调函数
+            // 触发 jump 回调的方式有两种
+            // 1. 切换页码或每页显示的数据条数时触发
+            // 2. 调用 laypage.render() 方法时触发
+            jump: function (obj, first) {
+                q.pagenum = obj.curr
+                q.pagesize = obj.limit
+                // 根据更改过后的查询参数，重新获取文章数据，并渲染到页面
+
+                // 可以通过 first 的值， 判断是哪种方式触发的 jump 回调
+                // 如果通过 1 触发，first 的值为 undifined
+                // 如果通过 2 触发，first 的值为 true
+                if (!first) {
+                    getArtList()
+                }
+            }
         })
     }
 
-})
+    // 通过代理的形式，给删除按钮绑定点击事件
+    $('tbody').on('click', '.btn-delete', function () {
+        // 获取删除按钮的个数
+        let len = $('.btn-delete').length
+        // 获取要删除的文章 id
+        let id = $(this).attr('data-id')
+        // 询问是否确认删除
+        layer.confirm('是否确认删除？', { icon: 3, title: '删除文章' }, function (index) {
+            //do something
+            $.ajax({
+                method: 'GET',
+                url: '/my/article/delete/' + id,
+                success: function (res) {
+                    if (res.status !== 0) {
+                        return layer.msg(res.message)
+                    }
+                    layer.msg('删除成功！')
+                    // 当数据删除完成后，需要判断当前这一页中，是否还有剩余的数据
+                    // 如果没有剩余的数据了,则让页码值 -1 之后,
+                    // 再重新调用 initTable 方法
+                    if (len === 1) {
+                        // 如果 len 的值等于1，证明删除完毕之后，页面上就没有任何数据了
+                        // 页码值最小必须是 1
+                        q.pagenum = q.pagenum === 1 ? 1 : q.pagenum - 1
+                    }
+                    getArtList()
+                }
+            })
 
+            layer.close(index)
+        })
+    })
+
+})
 
